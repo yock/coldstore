@@ -1,25 +1,16 @@
 package home
 
 import (
-  "log"
   "embed"
   "net/http"
   "html/template"
+  "yock.dev/coldstore/layout"
 )
 
 //go:embed templates/*.html
 var templateFiles embed.FS
 
-var indexTemplate *template.Template
-
-func Init(layout *template.Template) {
-  t, err := template.Must(layout.Clone()).ParseFS(templateFiles, "templates/index.html")
-  if err != nil {
-    log.Fatal(err.Error())
-  }
-
-  indexTemplate = t
-}
+var indexTemplate *template.Template = template.Must(layout.Layout().ParseFS(templateFiles, "templates/index.html"))
 
 func HomeHandler(response http.ResponseWriter, request *http.Request) {
   err := indexTemplate.Execute(response, nil)
