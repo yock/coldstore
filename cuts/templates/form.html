@@ -1,0 +1,36 @@
+{{define "form"}}
+<div class="bg-light p-2 mb-3">
+  <div id="cuts-form">
+    <h3>{{.FormTitle}}</h3>
+    <form
+      {{if eq .Selected.ID 0}}
+        hx-post="/cuts"
+      {{else}}
+        hx-put="/cuts/{{.Selected.ID}}"
+      {{end}}
+      hx-target="#main"
+      hx-selector="#main"
+      class="needs-validation mb-3">
+      <input type="hidden" name="unit" value="oz">
+      <div>
+        <label for="name">Name</label>
+        <input type="text" name="name" value="{{.Selected.Name}}" required class="form-control">
+      </div>
+      <div>
+        <label for="meat_type">Meat</label>
+        <select name="meat_type" class="form-select">
+          {{range .MeatTypes}}
+          <option value="{{.Value}}" {{if eq .Value $.Selected.Meat}}selected{{end}}>{{.Label}}</option>
+          {{end}}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="weight">Weight</label>
+        <input type="number" name="weight" value="{{.Selected.Weight}}" required step="1" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="button" class="btn btn-secondary" hx-get="/cuts">Cancel</button>
+    </form>
+  </div>
+</div>
+{{end}}

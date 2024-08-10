@@ -1,36 +1,28 @@
 {{ define "content" }}
 <h2>Cuts</h2>
-<form class="needs-validation mb-3" method="post">
-  <input type="hidden" name="unit" value="oz">
-  <div>
-    <label for="name">Name</label>
-    <input type="text" name="name" value="" required class="form-control">
-  </div>
-  <div>
-    <label for="meat_type">Meat</label>
-    <select name="meat_type" class="form-select">
-      {{range .MeatTypes}}
-      <option value="{{.Value}}">{{.Label}}</option>
-      {{end}}
-    </select>
-  </div>
-  <div class="mb-3">
-    <label for="weight">Weight</label>
-    <input type="number" name="weight" value="" required step="1" class="form-control">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-<div class="row row-cols-1 rol-cols-md-2 g-4">
-  {{ range .Cuts }}
-  <div class="col col-md-2 mb-3">
-    <div class="card h-100">
-      <div class="card-body">
-        <h5 class="card-title">{{ .Name }}</h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">{{ .Meat | Title }}</h6>
+<div class="row">
+  <div class="col-12 col-md-6 col-lg-9 order-2 order-md-1 order-lg-1">
+    <div class="row row-cols-1 rol-cols-md-2 g-4">
+      {{ range .Cuts }}
+      <div class="col">
+        <div
+          hx-get="/cuts/{{.ID}}"
+          hx-trigger="click"
+          hx-target="#cuts-form"
+          hx-select="#cuts-form"
+          hx-swap="innerHTML"
+          class="card h-100 bg-primary-subtle border-primary-subtle">
+          <div class="card-body">
+            <h5 class="card-title">{{ .Name }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ .Meat | Title }}</h6>
+          </div>
+        </div>
       </div>
+      {{ end }}
     </div>
   </div>
-  {{ end }}
+  <div class="col-12 col-md-6 col-lg-3 order-1 order-md-2 order-lg-2">
+    {{template "form".}}
+  </div>
 </div>
 {{ end }}

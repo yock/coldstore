@@ -15,7 +15,7 @@ import (
 var templateFiles embed.FS
 
 var templates = map[string]*template.Template {
-  "index": template.Must(layout.Layout().ParseFS(templateFiles, "templates/index.html")),
+  "index": template.Must(layout.Layout().ParseFS(templateFiles, "templates/index.html", "templates/form.html")),
 }
 
 type Option struct {
@@ -25,14 +25,34 @@ type Option struct {
 
 type IndexModel struct {
   Title string
+  FormTitle string
   Cuts []data.Cut
   MeatTypes []Option
+  Selected data.Cut
 }
 
 var meatTypes = []Option {
   { Value: "beef", Label: "Beef" },
   { Value: "chicken", Label: "Chicken" },
   { Value: "pork", Label: "Pork" },
+}
+
+func editHandler(response http.ResponseWriter, request *http.Request) {
+  vars := mux.Vars(request)
+  var selected data.Cut
+  data.Conn.First(&selected, vars["id"])
+  var cuts []data.Cut
+  data.Conn.Find(&cuts)
+  data := IndexModel {
+    MeatTypes: meatTypes,
+    Cuts: cuts,
+    FormTitle: "Edit Cut",
+    Selected: selected,
+  }
+  err := templates["index"].Execute(response, data)
+  if err != nil {
+    http.Error(response, err.Error(), http.StatusInternalServerError)
+  }
 }
 
 
@@ -42,6 +62,7 @@ func indexHandler(response http.ResponseWriter, request *http.Request) {
   data := IndexModel {
     MeatTypes: meatTypes,
     Cuts: cuts,
+    FormTitle: "Add Cut",
   }
   err := templates["index"].Execute(response, data)
   if err != nil {
@@ -68,5 +89,6 @@ func createHandler(response http.ResponseWriter, request *http.Request) {
 
 func Router(router *mux.Router) {
   router.HandleFunc("", indexHandler).Methods("GET")
+  router.HandleFunc("/{id:[0-9]+}", editHandler).Methods("GET")
   router.HandleFunc("", createHandler).Methods("POST")
 }
