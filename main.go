@@ -6,8 +6,11 @@ import (
   "net/http"
   "embed"
   "github.com/gorilla/mux"
+  "github.com/joho/godotenv"
   "yock.dev/coldstore/cuts"
+  "yock.dev/coldstore/barcodes"
   "yock.dev/coldstore/home"
+  "yock.dev/coldstore/data"
 )
 
 //go:embed static/*
@@ -15,6 +18,13 @@ import (
 var staticFS embed.FS
 
 func main () {
+  log.Println("Loading environment file")
+  err := godotenv.Load()
+  if err != nil {
+    log.Fatal("Could not load .env file")
+  }
+
+  data.Connect()
   port := os.Getenv("PORT")
   if port == "" {
     port = "8080"
@@ -22,6 +32,7 @@ func main () {
 
   router := mux.NewRouter()
   cuts.Router(router.PathPrefix("/{cuts:cuts\\/?}").Subrouter())
+  barcodes.Router(router.PathPrefix("/{barcodes:barcodes\\/?}").Subrouter())
   router.HandleFunc("/", home.HomeHandler)
   router.PathPrefix("/static/").Handler(http.FileServerFS(staticFS))
   router.PathPrefix("/favicon.ico").Handler(http.FileServerFS(staticFS))

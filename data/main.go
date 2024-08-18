@@ -2,20 +2,24 @@ package data
 
 import (
   "log"
+  "fmt"
+  "os"
   "gorm.io/gorm"
-  "gorm.io/driver/sqlite"
+  "gorm.io/driver/postgres"
 )
 
 var Conn *gorm.DB
 
-func init() {
-  connection, err := gorm.Open(sqlite.Open("coldstore.sqlite"))
+func Connect() {
+  dsn := fmt.Sprintf("host=%s user=%s dbname=%s TimeZone=UTC", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"))
+  log.Println("Connecting to database")
+  connection, err := gorm.Open(postgres.Open(dsn))
   if err != nil {
     log.Panic("Could not open database")
   }
 
   Conn = connection
 
-  Conn.AutoMigrate(&Cut{})
+  Conn.AutoMigrate(&Cut{}, &Barcode{})
   log.Println("Data migrations complete")
 }

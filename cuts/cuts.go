@@ -43,13 +43,13 @@ func editHandler(response http.ResponseWriter, request *http.Request) {
   data.Conn.First(&selected, vars["id"])
   var cuts []data.Cut
   data.Conn.Find(&cuts)
-  data := IndexModel {
+  model := IndexModel {
     MeatTypes: meatTypes,
     Cuts: cuts,
     FormTitle: "Edit Cut",
     Selected: selected,
   }
-  err := templates["index"].Execute(response, data)
+  err := templates["index"].Execute(response, model)
   if err != nil {
     http.Error(response, err.Error(), http.StatusInternalServerError)
   }
