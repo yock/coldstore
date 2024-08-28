@@ -40,7 +40,7 @@ var meatTypes = []Option {
 func editHandler(response http.ResponseWriter, request *http.Request) {
   vars := mux.Vars(request)
   var selected data.Cut
-  data.Conn.First(&selected, vars["id"])
+  data.Conn.First(&selected, "uuid = ?", vars["id"])
   var cuts []data.Cut
   data.Conn.Find(&cuts)
   model := IndexModel {
@@ -53,6 +53,21 @@ func editHandler(response http.ResponseWriter, request *http.Request) {
   if err != nil {
     http.Error(response, err.Error(), http.StatusInternalServerError)
   }
+}
+
+func updateHandler(response http.ResponseWriter, request *http.Request) {
+  vars := mux.Vars(request)
+  var selected data.Cut
+  data.Conn.First(&selected, "uuid = ?", vars["id"])
+  request.ParseForm()
+  weight, err := strconv.ParseInt(request.FormValue("weight"), 10, 64)
+  if err != nil {
+  }
+  selected.Name = request.FormValue("name")
+  selected.Weight = weight
+  selected.Meat = request.FormValue("meat_type")
+  data.Conn.Save(&selected)
+  http.Redirect(response, request, "/cuts", http.StatusSeeOther)
 }
 
 
@@ -89,6 +104,7 @@ func createHandler(response http.ResponseWriter, request *http.Request) {
 
 func Router(router *mux.Router) {
   router.HandleFunc("", indexHandler).Methods("GET")
-  router.HandleFunc("/{id:[0-9]+}", editHandler).Methods("GET")
+  router.HandleFunc("/{id:[0-9a-z-]+}", editHandler).Methods("GET")
   router.HandleFunc("", createHandler).Methods("POST")
+  router.HandleFunc("/{id:[0-9a-z-]+}", updateHandler).Methods("PUT")
 }

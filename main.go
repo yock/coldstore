@@ -8,7 +8,6 @@ import (
   "github.com/gorilla/mux"
   "github.com/joho/godotenv"
   "yock.dev/coldstore/cuts"
-  "yock.dev/coldstore/barcodes"
   "yock.dev/coldstore/home"
   "yock.dev/coldstore/data"
 )
@@ -32,7 +31,6 @@ func main () {
 
   router := mux.NewRouter()
   cuts.Router(router.PathPrefix("/{cuts:cuts\\/?}").Subrouter())
-  barcodes.Router(router.PathPrefix("/{barcodes:barcodes\\/?}").Subrouter())
   router.HandleFunc("/", home.HomeHandler)
   router.PathPrefix("/static/").Handler(http.FileServerFS(staticFS))
   router.PathPrefix("/favicon.ico").Handler(http.FileServerFS(staticFS))

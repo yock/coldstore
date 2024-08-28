@@ -3,10 +3,10 @@
   <div id="cuts-form">
     <h3>{{.FormTitle}}</h3>
     <form
-      {{if eq .Selected.ID 0}}
+      {{if eq .Selected.UUID.String "00000000-0000-0000-0000-000000000000"}}
         hx-post="/cuts"
       {{else}}
-        hx-put="/cuts/{{.Selected.ID}}"
+        hx-put="/cuts/{{.Selected.UUID}}"
       {{end}}
       hx-target="#main"
       hx-select="#main"

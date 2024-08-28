@@ -20,6 +20,6 @@ func Connect() {
 
   Conn = connection
 
-  Conn.AutoMigrate(&Cut{}, &Barcode{})
+  Conn.AutoMigrate(&Cut{})
   log.Println("Data migrations complete")
 }

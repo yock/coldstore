@@ -5,18 +5,23 @@
     <div class="row row-cols-1 rol-cols-md-2 g-4">
       {{ range .Cuts }}
       <div class="col">
-        <div
-          hx-get="/cuts/{{.ID}}"
-          hx-trigger="click"
-          hx-target="#cuts-form"
-          hx-select="#cuts-form"
-          hx-swap="innerHTML"
-          class="card h-100 bg-primary-subtle border-primary-subtle">
-          <div class="card-body">
-            <h5 class="card-title">{{ .Name }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">{{ .Meat | Title }}</h6>
+        <a href="/cuts/{{.UUID}}">
+          <div class="card h-100 bg-primary-subtle border-primary-subtle">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h5 class="card-title">{{ .Name }}</h5>
+                </div>
+                <div class="col-md-8">
+                  <img src="data:image/jpg;base64,{{.Barcode}}" alt="" class="card-img-top h-100 rounded-0">
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-body-secondary">
+              {{.Weight}}{{.Unit}} of {{.Meat | Title}}
+            </div>
           </div>
-        </div>
+        </a>
       </div>
       {{ end }}
     </div>
