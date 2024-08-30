@@ -32,10 +32,15 @@ func main () {
     port = "8443"
   }
 
+  domain := os.Getenv("domain")
+  if domain == "" {
+    domain = "home.yock.dev"
+  }
+
   certManager := autocert.Manager{
     Prompt: autocert.AcceptTOS,
     Cache: autocert.DirCache("certs"),
-    HostPolicy: autocert.HostWhitelist("home.yock.dev"),
+    HostPolicy: autocert.HostWhitelist(domain),
   }
 
   router := mux.NewRouter()
