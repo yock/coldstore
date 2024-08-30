@@ -13,6 +13,7 @@ import (
   "yock.dev/coldstore/home"
   "yock.dev/coldstore/data"
   "yock.dev/coldstore/scan"
+  "yock.dev/coldstore/print"
 )
 
 //go:embed static/*
@@ -46,6 +47,7 @@ func main () {
   router := mux.NewRouter()
   cuts.Router(router.PathPrefix("/{cuts:cuts\\/?}").Subrouter())
   scan.Router(router.PathPrefix("/{scan:scan\\/?}").Subrouter())
+  print.Router(router.PathPrefix("/{print:print\\/?}").Subrouter())
   router.HandleFunc("/", home.HomeHandler)
   router.PathPrefix("/static/").Handler(http.FileServerFS(staticFS))
   router.PathPrefix("/favicon.ico").Handler(http.FileServerFS(staticFS))
