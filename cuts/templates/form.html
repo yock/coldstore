@@ -1,12 +1,15 @@
 {{define "form"}}
 <div class="bg-light p-2 mb-3">
+  <div id="print">
+    <a href="/print">Print Labels</a>
+  </div>
   <div id="cuts-form">
     <h3>{{.FormTitle}}</h3>
     <form
-      {{if eq .Selected.UUID.String "00000000-0000-0000-0000-000000000000"}}
+        {{if eq .Selected.ID 0}}
         hx-post="/cuts"
       {{else}}
-        hx-put="/cuts/{{.Selected.UUID}}"
+        hx-put="/cuts/{{.Selected.ID}}"
       {{end}}
       hx-target="#main"
       hx-select="#main"

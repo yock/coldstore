@@ -1,21 +1,15 @@
 package data
 
 import (
-  "log"
+  "fmt"
   "time"
   "gorm.io/gorm"
-  "image/jpeg"
-  "encoding/base64"
-  "bytes"
+  "image"
   "github.com/boombuler/barcode/code128"
-  "github.com/google/uuid"
 )
 
 type Cut struct {
-  UUID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-  CreatedAt time.Time
-  UpdatedAt time.Time
-  DeletedAt gorm.DeletedAt `gorm:"index"`
+  gorm.Model
   Name string
   Meat string
   Weight int64
@@ -25,12 +19,9 @@ type Cut struct {
   PrintedAt time.Time
 }
 
-func (c *Cut) Barcode() string {
-  code, _ := code128.Encode(c.UUID.String())
-  buffer := new(bytes.Buffer)
-  if err := jpeg.Encode(buffer, code, nil); err != nil {
-    log.Println("Unable to encode image")
-  }
-  return base64.StdEncoding.EncodeToString(buffer.Bytes())
+func (c *Cut) Barcode() image.Image {
+  strid := fmt.Sprintf("%010d", c.ID)
+  code, _ := code128.Encode(strid)
+  return code
 }
 

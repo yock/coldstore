@@ -1,1 +1,20 @@
-body {}
+/* CSS HEX */
+--alice-blue: #dcf3ffff;
+--ucla-blue: #2374abff;
+--finn: #6d326dff;
+--light-red: #ff8484ff;
+--straw: #e2de84ff;
+
+.video-container {
+  width: 100%;
+  height: 100%; 
+}
+.video-container video {
+  /* Make video to at least 100% wide and tall */
+  min-width: 100%; 
+  min-height: 100%; 
+
+  /* Setting width & height to auto prevents the browser from stretching or squishing the video */
+  width: auto;
+  height: auto;
+}
